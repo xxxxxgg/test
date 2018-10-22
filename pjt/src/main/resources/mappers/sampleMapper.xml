@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vil.pjt.mappers.SampleMapper">
+	<select id="getTime" resultType="string">
+		select now()
+	</select>
+	
+	<insert id="insertSample">
+		insert into member(mid, mpw, mname, memail) values(#{mid}, #{mpw}, #{mname}, #{memail})
+	</insert>
+	
+	<select id="selectSample" resultType="com.vil.pjt.domain.SampleVO">
+		select * from member
+		where mid = #{mid}
+	</select>
+	
+	<select id="readWithPw" resultType="com.vil.pjt.domain.SampleVO">
+		select * from member
+		where mid = #{mid} and mpw = #{mpw}
+	</select>
+	
+	<update id="updateSample">
+		update member set mpw = #{mpw}, mname = #{mname}, memail = #{memail}
+		where mid = #{mid}
+	</update>
+	
+	<delete id="deleteSample">
+		delete from member
+		where mid = #{mid}
+	</delete>
+	
+	<select id="selectList" resultType="SampleVO">
+		select *
+		from member
+		order by regdate desc
+	</select>
+	
+	<update id="updatePoint">
+		update json set no = #{point} 
+		where no = 2
+	</update>
+</mapper>
