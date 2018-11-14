@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration 
+PUBLIC "-//maybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org//dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<!-- 패키지 구조를 리팩터링 시 여기서만 바꾸면 되겠음 -->
+		<typeAlias type="com.study.board.domain.BoardVO" alias="BoardVO"/>
+		<typeAlias type="com.study.legacy.domain.LexiconVO" alias="LexiconVO"/>
+		<typeAlias type="com.study.board.domain.ReplyVO" alias="ReplyVO"/>
+		<typeAlias type="com.study.board.domain.MessageVO" alias="MessageVO"/>
+	</typeAliases>
+</configuration>

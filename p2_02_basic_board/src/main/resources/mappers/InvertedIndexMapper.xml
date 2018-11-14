@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="p2_02_basic_board.mapper.InvertedIndexMapper">
+	
+	<insert id="createLexiconByBatch" parameterType="map">
+		INSERT INTO tbl_lexicon(lexicon)
+			   VALUES
+			   <foreach item="lexicon" collection="list" open="" separator="," close="">
+					(#{lexicon.lexicon})
+			   </foreach>		
+	</insert>
+	
+	<select id="findLexicon" resultType="LexiconVO">
+			select * from tbl_lexicon
+			 where lexicon in
+			<foreach item="lex" collection="list" separator="," >
+				#{lex}
+			</foreach>
+	</select>
+	
+	<insert id="createAppearance4NewLexByBatch" parameterType="map">
+		INSERT INTO tbl_appearance(targetType, lid, targetId, cnt)
+			   VALUES
+			   <foreach item="appearance" collection="list" open="" separator="," close="">
+					(#{appearance.targetType},
+					(select id from tbl_lexicon where lexicon = #{appearance.lexicon}),
+					  #{appearance.targetId}, #{appearance.cnt})
+			   </foreach>
+	</insert>
+	
+	<insert id="createAppearanceByBatch" parameterType="map">
+		INSERT INTO tbl_appearance(targetType, lid, targetId, cnt)
+			   VALUES
+			   <foreach item="appearance" collection="list" open="" separator="," close="">
+					(#{appearance.targetType}, #{appearance.lexicon}, #{appearance.targetId}, #{appearance.cnt})
+			   </foreach>
+	</insert>
+</mapper>

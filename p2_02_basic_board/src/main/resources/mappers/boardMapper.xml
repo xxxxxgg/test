@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="p2_02_basic_board.mapper.BoardMapper">
+
+	<select id="findBoardByID" resultType="BoardVO">
+		select * from tbl_board where bno = #{bno}
+	</select>
+
+	<select id="findAllBoard" resultType="BoardVO">
+		<![CDATA[
+			select * from tbl_board
+			 order by bno desc, regdate desc
+		]]>
+	</select>
+	
+	<select id="findBoardPerPage" resultType="BoardVO">
+		<![CDATA[
+			select * from tbl_board
+			 order by bno desc, regdate desc
+			 limit ${pageStart}, ${pageSize}
+		]]>
+	</select>
+	
+	<sql id="BoardPerPageBySearch">
+		<if test="searchType != null">
+			<if test="searchType == 'TITLE'.toString()">
+				and title like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'CONTENT'.toString()">
+				and content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'WRITER'.toString()">
+				and writer like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'TITLE_CONTENT'.toString()">
+				and (title like CONCAT('%', #{keyword}, '%') 
+					or content like CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'CONTENT_WRITER'.toString()">
+				and (content like CONCAT('%', #{keyword}, '%') 
+					or writer like CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'TITLE_CONTENT_WRITER'.toString()">
+				and (title like CONCAT('%', #{keyword}, '%') 
+					or content like CONCAT('%', #{keyword}, '%')
+					or writer like CONCAT('%', #{keyword}, '%'))
+			</if>
+		</if>
+	</sql>
+	
+	<select id="findBoardPerPageBySearch" resultType="BoardVO">
+		<![CDATA[
+			select * from tbl_board
+			where bno > 0			
+		]]>
+		
+		<include refid="BoardPerPageBySearch"></include>
+		
+		<![CDATA[			
+			order by bno desc, regdate desc
+			limit ${pageStart}, ${pageSize}
+		]]>
+	</select>
+	<select id="findCountOfBoardBySearch" resultType="int">
+		<![CDATA[
+			select count(*) 
+			from tbl_board
+			where bno > 0
+		]]>
+		<include refid="BoardPerPageBySearch"></include>
+	</select>
+	
+	<select id="getBoardCount" resultType="int">
+		<![CDATA[
+		select count(bno) from tbl_board
+		where bno > 0
+		]]>
+	</select>
+
+	<insert id="createBoard">
+		insert into tbl_board(title, content, writer)
+			   values(#{title}, #{content}, #{writer})
+	</insert>
+	
+	<insert id="createBoardByBatch" parameterType="map">
+		INSERT INTO tbl_board(title, content, writer)
+			   VALUES
+			   <foreach item="board" index="index" collection="list" open="" separator="," close="">
+					(#{board.title}, #{board.content}, #{board.writer})
+			   </foreach>		
+	</insert>
+
+	<update id="updateBoard">
+		update tbl_board set
+			   title = #{title},
+			   content = #{content},
+			   writer = #{writer}
+		 where bno = #{bno}
+	</update>
+
+	<delete id="deleteBoard">
+		delete from tbl_board where bno = #{bno}
+	</delete>
+	
+	<delete id="batchDeleteBoard" parameterType="map">
+		delete from tbl_board where bno in 
+		<foreach item="target" index="index" collection="arrbno" open="(" separator="," close=")">
+			#{target.value}
+		</foreach>
+	</delete>
+</mapper>

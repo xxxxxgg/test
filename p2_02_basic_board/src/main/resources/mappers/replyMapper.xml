@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="p2_02_basic_board.mapper.replyMapper">
+	<select id="listReplyAll" resultType="ReplyVO">
+		select * from tbl_reply
+		where bno = #{bno}
+		order by rno desc
+	</select>
+	<select id="listReplyPage" resultType="ReplyVO">
+		select * from tbl_reply
+		where bno = #{bno}
+		order by rno desc
+		limit #{cri.pageStart}, #{cri.pageSize}
+	</select>
+	<select id="replyCount" resultType="int">
+		select count(*) from tbl_reply 
+		where bno = #{bno}
+	</select>
+	
+	<insert id="createReply">
+		insert into tbl_reply(bno, replytext, replyer)
+		values(#{bno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<update id="updateReply">
+		update tbl_reply set replytext = #{replytext}, updatedate = now()
+		where rno = #{rno}
+	</update>
+	
+	<delete id="deleteReply">
+		delete from tbl_reply where rno = #{rno}
+	</delete>
+</mapper>
